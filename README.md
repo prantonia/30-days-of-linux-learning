@@ -1,4 +1,4 @@
-# 30 Days of Learning
+# 30 Days of Linux Learning
 
 Welcome to my 30 Days of Learning challenge.
 
