@@ -51,24 +51,13 @@ To understand the origins of Linux, what makes it different from other operating
 
 ## Output
 
-![Linux Terminal Setup](screenshots/change_password.png)
-*Figure 1: DEC VM Password Setup*
-
-
----
-
-![Linux Terminal Setup](screenshots/terminal_access.png)
-*Figure 2: DEC VM Terminal Access*
-
----
-
 ![Linux Terminal Setup](screenshots/folder_creation.png)
-*Figure 3: Screenshots Folder Creation*
+*Figure 1: Screenshots Folder Creation*
 
 ---
 
 ![Linux Terminal Setup](screenshots/basic_commands.png)
 
-*Figure 4: Basic Commands*
+*Figure 2: Basic Commands*
 
 ---
