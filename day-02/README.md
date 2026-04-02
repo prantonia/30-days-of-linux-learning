@@ -62,6 +62,7 @@ To learn how the Linux file system is structured and practice navigating directo
 ---
 
 ![File System](screenshots/root_file_system.png)
+
 *Figure 2: Root File System*
 
 ---
