@@ -1,0 +1,6 @@
+This file is for taking note for Linux learning
+Linux is interesting
+Today I practiced using the Linux terminal to create files, move between folders, 
+and understand how paths work. 
+I am still learning, but I can already see how useful the command line is for working faster and more efficiently. 
+My goal is to keep practicing every day so I become more confident using Linux.
