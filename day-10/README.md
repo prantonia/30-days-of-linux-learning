@@ -54,7 +54,7 @@ To understand how file permissions work in Linux, how to read permission strings
 
 ## Resources
 
-- [The Linux Command Line - Chapter 9: Permissions]((https://linuxcommand.org/tlcl.php))
+- [The Linux Command Line - Chapter 9: Permissions](https://linuxcommand.org/tlcl.php)
 - [An Introduction to Linux Permissions - DigitalOcean](https://www.digitalocean.com/community/tutorials/an-introduction-to-linux-permissions)
 - [chmod calculator](https://chmod-calculator.com)
 
