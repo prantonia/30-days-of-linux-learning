@@ -1,0 +1,2 @@
+cat: missingfile: No such file or directory
+cat: anothermissingfile: No such file or directory

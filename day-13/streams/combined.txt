@@ -1,0 +1,2 @@
+ls: cannot access 'missingfile': No such file or directory
+output.txt

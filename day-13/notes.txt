@@ -1,0 +1,6 @@
+Today I learned that Linux commands do not just produce one type of output. 
+They use standard streams for input, normal output, and error output. 
+I practiced redirecting stdout, stderr, 
+and stdin using operators like >, >>, 2>, 2>>, 2>&1, and <. 
+This helped me understand how to control command results more precisely 
+and how to separate useful output from error messages.

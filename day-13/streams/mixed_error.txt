@@ -1,0 +1,2 @@
+ls: cannot access 'validfile': No such file or directory
+ls: cannot access 'invalidfile': No such file or directory
