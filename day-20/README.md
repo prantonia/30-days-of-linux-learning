@@ -58,10 +58,10 @@ To understand how Linux systems are accessed remotely using SSH, learn secure re
 ## Challenges Faced
 
 - Understanding public vs private SSH keys
-- Remembering IP + username syntax
 - Distinguishing password login vs key-based login
 - Host authenticity prompts on first connection
 - Managing permissions for SSH keys
+- Permission errors on `~/.ssh` directory (must be 700) and authorized_keys (must be 600)
 
 ---
 
@@ -71,13 +71,15 @@ To understand how Linux systems are accessed remotely using SSH, learn secure re
 - Key-based authentication is more secure than passwords
 - `scp` and `rsync` are essential for remote file transfers
 - SSH enables remote server management, cloud access, and automation
+- Always backup your private SSH key and never share it with anyone
 
 ---
 
 ## Resources
 
+- [SSH Essentials: Working with SSH Servers, Clients, and Keys - DigitalOcean](https://www.digitalocean.com/community/tutorials/ssh-essentials-working-with-ssh-servers-clients-and-keys)
 - [Using the SSH Config File - Linuxize.com](https://linuxize.com/post/using-the-ssh-config-file/)
-- [Security Guide: Hardening SSH](ssh.com/academy/ssh/sshd)
+- [Basic overview of SSH Keys](https://www.ssh.com/academy/ssh-keys)
 
 
 ---
