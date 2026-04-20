@@ -1,0 +1,3 @@
+Today,  I learned how Linux systems are accessed remotely using SSH. 
+I practiced key generation, remote login syntax, file transfer with scp, and folder sync with rsync. 
+SSH is a core skill for managing servers, cloud systems, and remote development workflows.
