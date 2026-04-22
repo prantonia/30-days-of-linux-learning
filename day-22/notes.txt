@@ -1,0 +1,2 @@
+Today I learned how Linux uses systemd to manage services and background processes. 
+I practiced checking service health, restarting services, enabling startup services, and reading logs with journalctl.
