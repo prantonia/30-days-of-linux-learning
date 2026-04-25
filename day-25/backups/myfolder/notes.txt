@@ -1,0 +1,1 @@
+Compression saves storage space, while backups protect your work
