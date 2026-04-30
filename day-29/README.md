@@ -1,272 +1,95 @@
-# Day 29 - Building a Linux-Powered Data Pipeline Monitor
+# Day 29 - Linux Data Pipeline File Monitor (Project)
 
 ## Objective
 
-To build a **Linux-based data pipeline monitor** that automatically detects incoming data files, validates them, logs metadata, and generates daily summary reports using core Linux tools and Bash scripting.
+To apply the Linux skills learned across 28 days by building a real, intermediate-level data engineering project: an automated file monitoring and validation system that watches a directory for incoming data files, validates them, logs metadata, and generates a daily summary report, all in pure Bash.
 
 ---
 
-## Project Overview
+## What I Learned
 
-This project simulates a **real-world data ingestion layer** where files arrive into a directory and must be:
-
-* validated
-* tracked
-* processed
-* monitored
-
-It demonstrates how Linux can be used as a **lightweight data engineering platform** without external frameworks.
-
----
-
-## Features
-
-* Monitors an incoming directory for new files
-* Validates file integrity (readable, non-empty, correct format)
-* Extracts metadata (filename, size, row count, timestamp)
-* Routes files to:
-
-  * `processed/` (valid files)
-  * `quarantine/` (invalid files)
-* Logs all events in a structured format
-* Generates daily summary reports
-* Fully automated using cron
+- How to build a **production-quality Bash script** that combines: functions, arrays, error handling (`set -euo pipefail`), `trap` for cleanup, and `find` for file discovery
+- How to use `find -maxdepth 1 -type f -print0` with `while read -r -d ''` to safely iterate over files — handling filenames with spaces correctly
+- How to use `wc -l`, `du -sh`, `grep -c`, and `awk` together to extract structured metadata from different file types (CSV, JSON, TXT)
+- How to write a **polling loop** - a `while true` loop with `sleep` that continuously scans a directory for new files without using `inotify` or any external dependency
+- How `trap cleanup INT TERM` works - intercepting CTRL+C and TERM signals to run a cleanup function before the script exits, ensuring the summary report always prints
+- How to write **structured log entries** in a consistent format that can be queried later with `grep` and `awk`
+- How to use **ANSI colour codes** (`\033[0;32m` etc.) to make terminal output readable at a glance
+- How to schedule a companion cron job that generates a daily summary automatically at 23:59
 
 ---
 
-## Project Structure
+## What I Built / Practiced
 
-```text
-.
-├── README.md
-└── day-29-project
-    ├── .gitignore
-    ├── backups
-    │   └── .gitkeep
-    ├── incoming
-    │   └── .gitkeep
-    ├── logs
-    │   ├── .gitkeep
-    │   └── pipeline_monitor.log
-    ├── processed
-    │   ├── .gitkeep
-    │   ├── events.json
-    │   └── transactions.csv
-    ├── quarantine
-    │   ├── .gitkeep
-    │   ├── empty.csv
-    │   └── readme.txt
-    ├── reports
-    │   ├── .gitkeep
-    │   └── daily_summary_2026-04-29.txt
-    └── scripts
-        ├── daily_summary.sh
-        └── pipeline_monitor.sh
+Built a three-script project inside `~/pipeline_monitor/`:
 
 ```
+~/pipeline_monitor/
+├── pipeline_monitor.sh      # Main monitor script
+├── generate_test_data.sh    # Test file generator to simulate incoming data
+├── setup_cron.sh            # Registers the daily summary cron job
+├── incoming/                # Drop zone — monitor watches this directory
+├── processed/               # Successfully validated files moved here
+├── failed/                  # Files that failed validation moved here
+├── logs/                    # Daily log files (pipeline_YYYY-MM-DD.log)
+└── reports/                 # Daily summary reports (summary_YYYY-MM-DD.txt)
+```
 
----
-
-## How It Works
-
-### 1. File Ingestion
-
-Files are dropped into:
+**How to run the project:**
 
 ```bash
-incoming/
-```
+# 1. Create the project directory
+mkdir -p ~/pipeline_monitor
+cd ~/pipeline_monitor
 
-Supported formats:
+# 2. Make all scripts executable
+chmod +x pipeline_monitor.sh generate_test_data.sh setup_cron.sh
 
-* `.csv`
-* `.json`
+# 3. Terminal 1 - start the monitor
+./pipeline_monitor.sh
 
----
+# 4. Terminal 2 - drop test files into the watch directory
+./generate_test_data.sh
 
-### 2. Validation Rules
+# 5. Watch Terminal 1 process each file in real time
+# Press CTRL+C in Terminal 1 to stop and generate the summary report
 
-Each file is checked for:
-
-* Read permission
-* Non-empty content
-* Valid extension
-
-Invalid files are moved to:
-
-```bash
-quarantine/
+# 6. Optional - Register the daily cron job
+./setup_cron.sh
+crontab -l  # verify it was registered
 ```
 
 ---
 
-### 3. Metadata Extraction
+## Challenges Faced
 
-For each valid file:
-
-* Filename
-* File size (bytes)
-* Row count
-* Timestamp
-
----
-
-### 4. Logging
-
-All events are stored in:
-
-```bash
-logs/pipeline_monitor.log
-```
-
-### Log Format
-
-```text
-timestamp | status | filename | size | rows | message
-```
-
-### Example
-
-```text
-2026-04-29 10:15:02|ACCEPTED|transactions.csv|234|6|File passed validation
-2026-04-29 10:16:11|REJECTED|empty.csv|0|0|File is empty
-```
-
----
-
-### 5. Processing
-
-* Valid files → `processed/`
-* Invalid files → `quarantine/`
-
----
-
-### 6. Daily Summary Report
-
-Generated automatically:
-
-```bash
-reports/daily_summary_YYYY-MM-DD.txt
-```
-
-### Includes:
-
-* Total files processed
-* Accepted vs rejected counts
-* Total data volume
-* Status breakdown
-* Recent activity
-
----
-
-## Setup and Usage
-
-### 1. Make scripts executable
-
-```bash
-chmod +x scripts/*.sh
-```
-
----
-
-### 2. Run manually
-
-```bash
-./scripts/pipeline_monitor.sh
-./scripts/daily_summary.sh
-```
-
----
-
-### 3. Automate with cron
-
-```bash
-crontab -e
-```
-
-Add:
-
-```bash
-*/5 * * * * /home/prantonia/projects/30-days-of-linux-learning/day-29/day-29-project/scripts/pipeline_monitor.sh
-59 23 * * * /home/prantonia/projects/30-days-of-linux-learning/day-29/day-29-project/scripts/daily_summary.sh
-```
-
----
-
-## Log Analysis (Real Linux Skills)
-
-### View accepted files
-
-```bash
-grep "|ACCEPTED|" logs/pipeline_monitor.log
-```
-
-### Count rejected files
-
-```bash
-grep -c "|REJECTED|" logs/pipeline_monitor.log
-```
-
-### Group by status
-
-```bash
-awk -F'|' '{count[$2]++} END {for (s in count) print s, count[s]}' logs/pipeline_monitor.log
-```
-
-### Total data processed
-
-```bash
-awk -F'|' '{sum += $4} END {print sum}' logs/pipeline_monitor.log
-```
-
----
-
-## Backup Strategy (Optional Extension)
-
-You can archive processed data:
-
-```bash
-tar -czf backups/backup-$(date +%F).tar.gz processed/ logs/ reports/
-```
-
----
-
-## Tools and Concepts Used
-
-* Bash scripting (`set -euo pipefail`)
-* File system operations (`mv`, `stat`, `wc`)
-* Text processing (`awk`, `grep`, `cut`)
-* Logging best practices
-* Cron scheduling
-* Linux permissions and validation
-* Data pipeline fundamentals
+- **Safely iterating files with spaces in names**: a basic `for f in $WATCH_DIR/*` breaks when filenames contain spaces. Fixed by using `find -print0` piped into `while IFS= read -r -d ''` - the null delimiter approach handles any filename correctly
+- **`set -e` conflicting with `grep -c`**: `grep -c` returns exit code `1` when it finds zero matches, which `set -euo pipefail` treats as a script failure. Fixed by appending `|| echo "0"` to grep calls that are expected to sometimes return no results
+- **`trap` and the polling loop**: getting `trap cleanup INT TERM` to correctly intercept CTRL+C inside a `while true; do ... sleep; done` loop - the trap fires when sleep is interrupted, which is the expected behaviour
 
 ---
 
 ## Key Takeaways
 
-* Linux can act as a **data processing engine**
-* Bash is powerful for **ETL-style workflows**
-* Structured logs enable **observability**
-* Automation (cron) is critical for production systems
-* File validation is essential in real pipelines
-
----
-
-## Note
-
-This project represents a **practical bridge between Linux and Data Engineering**, showing how core system tools can be used to build automated, observable, and reliable data workflows.
+- **This project is reflects real data engineering**: watching for files, validating schema/structure, logging metadata, moving files between stages (incoming → processed/failed), and reporting 
+- Every skill from the past 28 days showed up in this project
+- A script with `set -euo pipefail` + `trap` + structured logging is not just a practice exercise, it is the standard expected in production bash scripts at any serious data team
 
 ---
 
 ## Output
 
-![Project1](screenshots/project1.png)
-*Figure 1: Pipeline monitor processing files, valid files accepted, invalid ones quarantined*
+![Pipeline1](screenshots/pipeline1.png)
+*Figure 1: Pipeline monitor running - files validated, accepted, and rejected in real time*
 
 ---
 
-![Project3](screenshots/project3.png)
-*Figure 2: Daily summary report generated with file stats and recent log activity*
+![Pipeline2](screenshots/pipeline2.png)
+*Figure 2: Test data generator dropping sample files into the incoming directory*
+
+---
+
+![Pipeline3](screenshots/pipeline3.png)
+*Figure 3: Cron job configured for automated daily pipeline summary reporting*
 
 ---
