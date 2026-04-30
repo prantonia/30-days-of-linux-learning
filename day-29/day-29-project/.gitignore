@@ -1,0 +1,17 @@
+# Runtime data
+incoming/*
+processed/*
+quarantine/*
+logs/*
+reports/*
+backups/*
+
+# Keep folders but not contents
+!incoming/.gitkeep
+!processed/.gitkeep
+!quarantine/.gitkeep
+!logs/.gitkeep
+!reports/.gitkeep
+!backups/.gitkeep
+
+
